@@ -1,0 +1,260 @@
+<header class="mb-4">
+  <h1 class="titulo-pagina h3">Reportes del sistema</h1>
+  <p class="subtitulo-pagina mb-0">Panel exclusivo del administrador</p>
+</header>
+
+<ul class="nav nav-pills mb-4 gap-2" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" type="button" role="tab" data-bs-toggle="pill" data-bs-target="#tab-general">General</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" type="button" role="tab" data-bs-toggle="pill" data-bs-target="#tab-comerciales">Comerciales</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" type="button" role="tab" data-bs-toggle="pill" data-bs-target="#tab-cobertura">Cobertura y eventos</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" type="button" role="tab" data-bs-toggle="pill" data-bs-target="#tab-reservas">Reservas y operación</button>
+  </li>
+</ul>
+
+<div class="tab-content">
+
+  <!-- ============ GENERAL ============ -->
+  <div class="tab-pane fade show active" id="tab-general" role="tabpanel">
+    @if (resumen$ | async; as resumen) {
+      <div class="row g-3">
+        <div class="col-6 col-lg-4">
+          <div class="card kpi shadow-sm"><div class="card-body">
+            <span class="kpi-titulo">Clientes registrados</span>
+            <span class="kpi-valor">{{ resumen.clientes }}</span>
+          </div></div>
+        </div>
+        <div class="col-6 col-lg-4">
+          <div class="card kpi shadow-sm"><div class="card-body">
+            <span class="kpi-titulo">Agentes registrados</span>
+            <span class="kpi-valor">{{ resumen.agentes }}</span>
+          </div></div>
+        </div>
+        <div class="col-6 col-lg-4">
+          <div class="card kpi shadow-sm"><div class="card-body">
+            <span class="kpi-titulo">Administradores</span>
+            <span class="kpi-valor">{{ resumen.administradores }}</span>
+          </div></div>
+        </div>
+        <div class="col-6 col-lg-4">
+          <div class="card kpi shadow-sm"><div class="card-body">
+            <span class="kpi-titulo">Reservas registradas</span>
+            <span class="kpi-valor">{{ resumen.reservas }}</span>
+          </div></div>
+        </div>
+        <div class="col-6 col-lg-4">
+          <div class="card kpi shadow-sm"><div class="card-body">
+            <span class="kpi-titulo">Eventos registrados</span>
+            <span class="kpi-valor">{{ resumen.eventos }}</span>
+          </div></div>
+        </div>
+        <div class="col-6 col-lg-4">
+          <div class="card kpi kpi-destacado shadow-sm"><div class="card-body">
+            <span class="kpi-titulo">Ingresos 2026</span>
+            <span class="kpi-valor">{{ ingresosTotales | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+          </div></div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- ============ COMERCIALES ============ -->
+  <div class="tab-pane fade" id="tab-comerciales" role="tabpanel">
+    <div class="row g-4">
+
+      <div class="col-12">
+        <div class="card shadow-sm"><div class="card-body">
+          <h2 class="h5 mb-3">Ingresos totales por mes (2026)</h2>
+          @for (mes of ingresosMensuales$ | async; track mes.mes) {
+            <div class="fila-barra">
+              <span class="etiqueta">{{ mes.mes }}</span>
+              <div class="progress flex-grow-1">
+                <div class="progress-bar" [style.width.%]="(mes.ingresos / maxIngreso) * 100"></div>
+              </div>
+              <span class="valor">{{ mes.ingresos | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+            </div>
+          }
+        </div></div>
+      </div>
+
+      <div class="col-12 col-lg-6">
+        <div class="card shadow-sm"><div class="card-body">
+          <h2 class="h5 mb-3">Promedio de ingresos por agente</h2>
+          <table class="table table-sm align-middle mb-0 tabla-datos">
+            <thead><tr><th>Agente</th><th class="text-end">Promedio</th></tr></thead>
+            <tbody>
+              @for (agente of promedioAgentes$ | async; track agente.nombre) {
+                <tr>
+                  <td>{{ agente.nombre }}</td>
+                  <td class="text-end">{{ agente.promedio | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div></div>
+      </div>
+
+      <div class="col-12 col-lg-6">
+        <div class="card shadow-sm"><div class="card-body">
+          <h2 class="h5 mb-3">Promedio de ingresos por cliente</h2>
+          <table class="table table-sm align-middle mb-0 tabla-datos">
+            <thead><tr><th>Cliente</th><th class="text-end">Promedio</th></tr></thead>
+            <tbody>
+              @for (cliente of promedioClientes$ | async; track cliente.nombre) {
+                <tr>
+                  <td>{{ cliente.nombre }}</td>
+                  <td class="text-end">{{ cliente.promedio | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div></div>
+      </div>
+
+      <div class="col-12 col-lg-6">
+        <div class="card shadow-sm"><div class="card-body">
+          <h2 class="h5 mb-3">Reservas por evento y por mes</h2>
+          <table class="table table-sm align-middle mb-0 tabla-datos">
+            <thead><tr><th>Evento</th><th>Mes</th><th class="text-end">Reservas</th></tr></thead>
+            <tbody>
+              @for (fila of reservasEventoMes$ | async; track $index) {
+                <tr>
+                  <td>{{ fila.evento }}</td>
+                  <td>{{ fila.mes }}</td>
+                  <td class="text-end">{{ fila.reservas }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div></div>
+      </div>
+
+      <div class="col-12 col-lg-6">
+        <div class="card shadow-sm"><div class="card-body">
+          <h2 class="h5 mb-3">Eventos creados por agente y ciudad</h2>
+          <table class="table table-sm align-middle mb-0 tabla-datos">
+            <thead><tr><th>Agente</th><th>Ciudad</th><th class="text-end">Eventos</th></tr></thead>
+            <tbody>
+              @for (fila of eventosAgenteCiudad$ | async; track $index) {
+                <tr>
+                  <td>{{ fila.agente }}</td>
+                  <td>{{ fila.ciudad }}</td>
+                  <td class="text-end">{{ fila.eventos }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============ COBERTURA Y EVENTOS ============ -->
+  <div class="tab-pane fade" id="tab-cobertura" role="tabpanel">
+    <div class="card shadow-sm"><div class="card-body">
+      <h2 class="h5 mb-3">Listado de eventos por país, departamento y ciudad</h2>
+      <div class="table-responsive">
+        <table class="table table-sm align-middle mb-0 tabla-datos">
+          <thead>
+            <tr><th>País</th><th>Departamento</th><th>Ciudad</th><th>Evento</th><th>Estado</th></tr>
+          </thead>
+          <tbody>
+            @for (evento of eventos$ | async; track evento.id) {
+              <tr>
+                <td>{{ evento.ciudad.pais }}</td>
+                <td>{{ evento.ciudad.departamento }}</td>
+                <td>{{ evento.ciudad.nombre }}</td>
+                <td>{{ evento.nombre }}</td>
+                <td><app-estado-badge [estado]="evento.estado" /></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- ============ RESERVAS Y OPERACIÓN ============ -->
+  <div class="tab-pane fade" id="tab-reservas" role="tabpanel">
+    <div class="row g-4">
+
+      <div class="col-12">
+        <div class="card shadow-sm"><div class="card-body">
+          <h2 class="h5 mb-3">Historial de reservas por cliente</h2>
+          @for (item of historial$ | async; track item.cliente.id) {
+            <h3 class="h6 mt-3">{{ item.cliente.nombreCompleto }}</h3>
+            <div class="table-responsive">
+              <table class="table table-sm align-middle tabla-datos">
+                <thead>
+                  <tr><th>Reserva</th><th>Evento</th><th>Fecha</th><th class="text-end">Valor total</th><th>Estado</th></tr>
+                </thead>
+                <tbody>
+                  @for (reserva of item.reservas; track reserva.id) {
+                    <tr>
+                      <td>#{{ reserva.id }}</td>
+                      <td>{{ reserva.evento.nombre }}</td>
+                      <td>{{ reserva.fecha | date:'dd/MM/yyyy' }}</td>
+                      <td class="text-end">{{ reserva.valorTotal | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+                      <td><app-estado-badge [estado]="reserva.estado" /></td>
+                    </tr>
+                  } @empty {
+                    <tr><td colspan="5" class="text-muted">Sin reservas.</td></tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </div></div>
+      </div>
+
+      <div class="col-12 col-lg-6">
+        <div class="card shadow-sm"><div class="card-body">
+          <h2 class="h5 mb-3">Reservas canceladas y su causa</h2>
+          <table class="table table-sm align-middle mb-0 tabla-datos">
+            <thead><tr><th>Reserva</th><th>Cliente</th><th>Causa</th></tr></thead>
+            <tbody>
+              @for (reserva of reservasCanceladas$ | async; track reserva.id) {
+                <tr>
+                  <td>#{{ reserva.id }}</td>
+                  <td>{{ reserva.cliente.nombreCompleto }}</td>
+                  <td>{{ reserva.causaCancelacion }}</td>
+                </tr>
+              } @empty {
+                <tr><td colspan="3" class="text-muted">No hay reservas canceladas.</td></tr>
+              }
+            </tbody>
+          </table>
+        </div></div>
+      </div>
+
+      <div class="col-12 col-lg-6">
+        <div class="card shadow-sm"><div class="card-body">
+          <h2 class="h5 mb-3">Eventos cancelados y su causa</h2>
+          <table class="table table-sm align-middle mb-0 tabla-datos">
+            <thead><tr><th>Evento</th><th>Ciudad</th><th>Causa</th></tr></thead>
+            <tbody>
+              @for (evento of eventosCancelados$ | async; track evento.id) {
+                <tr>
+                  <td>{{ evento.nombre }}</td>
+                  <td>{{ evento.ciudad.nombre }}</td>
+                  <td>{{ evento.causaCancelacion }}</td>
+                </tr>
+              } @empty {
+                <tr><td colspan="3" class="text-muted">No hay eventos cancelados.</td></tr>
+              }
+            </tbody>
+          </table>
+        </div></div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
