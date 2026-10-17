@@ -1,0 +1,75 @@
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-9">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h1 class="titulo-pagina h3">Registrar evento</h1>
+        <p class="subtitulo-pagina">Ingresa la información del nuevo evento o espectáculo</p>
+
+        <div class="row g-3">
+          <div class="col-12 col-md-8">
+            <label for="nombre" class="form-label">Nombre del evento</label>
+            <input id="nombre" type="text" class="form-control">
+          </div>
+
+          <div class="col-12 col-md-4">
+            <label for="estado" class="form-label">Estado</label>
+            <select id="estado" class="form-select">
+              @for (estado of estados; track estado) {
+                <option>{{ estado }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="col-12">
+            <label for="descripcion" class="form-label">Descripción</label>
+            <textarea id="descripcion" class="form-control" rows="3"></textarea>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label for="teatro" class="form-label">Teatro</label>
+            <input id="teatro" type="text" class="form-control">
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label for="ciudad" class="form-label">Ciudad de realización</label>
+            <select id="ciudad" class="form-select">
+              @for (ciudad of ciudades$ | async; track ciudad.id) {
+                <option [value]="ciudad.id">{{ ciudad.nombre }} - {{ ciudad.departamento }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label for="inicio" class="form-label">Fecha y hora de inicio</label>
+            <input id="inicio" type="datetime-local" class="form-control">
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label for="fin" class="form-label">Fecha y hora estimada de finalización</label>
+            <input id="fin" type="datetime-local" class="form-control">
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label for="capacidad" class="form-label">Capacidad total de espectadores</label>
+            <input id="capacidad" type="number" class="form-control" min="1">
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label for="precio" class="form-label">Precio base de la entrada (COP)</label>
+            <input id="precio" type="number" class="form-control" min="0">
+          </div>
+
+          <div class="col-12">
+            <label for="observaciones" class="form-label">Observaciones</label>
+            <textarea id="observaciones" class="form-control" rows="2"></textarea>
+          </div>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2 mt-4">
+          <button type="button" class="btn btn-primary">Registrar evento</button>
+          <a class="btn btn-outline-secondary" routerLink="/agente/eventos">Ver eventos registrados</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,45 @@
+<header class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-4">
+  <div>
+    <h1 class="titulo-pagina h3">Eventos registrados</h1>
+    <p class="subtitulo-pagina mb-0">Agente: {{ agente.nombreCompleto }}</p>
+  </div>
+  <a class="btn btn-primary" routerLink="/agente/registrar-evento">+ Registrar evento</a>
+</header>
+
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0 tabla-datos">
+      <thead>
+        <tr>
+          <th>Código</th>
+          <th>Evento</th>
+          <th>Ciudad</th>
+          <th>Inicio</th>
+          <th class="text-center">Capacidad</th>
+          <th>Precio base</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (evento of eventos$ | async; track evento.id) {
+          <tr>
+            <td>EV-{{ evento.id }}</td>
+            <td>
+              <strong>{{ evento.nombre }}</strong><br>
+              <small class="text-muted">{{ evento.teatro }}</small>
+            </td>
+            <td>{{ evento.ciudad.nombre }}</td>
+            <td>{{ evento.fechaInicio | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td class="text-center">{{ evento.capacidad }}</td>
+            <td>{{ evento.precioBase | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+            <td><app-estado-badge [estado]="evento.estado" /></td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="7" class="text-center text-muted py-4">Aún no has registrado eventos.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,50 @@
+<header class="mb-4">
+  <h1 class="titulo-pagina h3">Administrar reservas</h1>
+  <p class="subtitulo-pagina mb-0">Consulta las reservas solicitadas y actualiza su estado</p>
+</header>
+
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0 tabla-datos">
+      <thead>
+        <tr>
+          <th>Reserva</th>
+          <th>Cliente</th>
+          <th>Evento</th>
+          <th>Fecha</th>
+          <th class="text-center">Entradas</th>
+          <th>Valor total</th>
+          <th>Estado actual</th>
+          <th>Cambiar estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (reserva of reservas$ | async; track reserva.id) {
+          <tr>
+            <td>#{{ reserva.id }}</td>
+            <td>{{ reserva.cliente.nombreCompleto }}</td>
+            <td>{{ reserva.evento.nombre }}</td>
+            <td>{{ reserva.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td class="text-center">{{ reserva.numeroEntradas }}</td>
+            <td>{{ reserva.valorTotal | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+            <td><app-estado-badge [estado]="reserva.estado" /></td>
+            <td>
+              <div class="acciones d-flex gap-2">
+                <select class="form-select form-select-sm" [attr.aria-label]="'Estado de la reserva ' + reserva.id">
+                  @for (estado of estados; track estado) {
+                    <option [selected]="estado === reserva.estado">{{ estado }}</option>
+                  }
+                </select>
+                <button type="button" class="btn btn-primary btn-sm">Actualizar</button>
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="8" class="text-center text-muted py-4">No hay reservas registradas.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
