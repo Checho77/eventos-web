@@ -1,0 +1,69 @@
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-8">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h1 class="titulo-pagina h3">Crear cuenta</h1>
+        <p class="subtitulo-pagina">Regístrate como cliente o como agente</p>
+
+        <div class="row g-3">
+          <div class="col-12 col-md-6">
+            <label for="tipo" class="form-label">Tipo de usuario</label>
+            <select id="tipo" class="form-select">
+              <option>Cliente</option>
+              <option>Agente</option>
+            </select>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label for="identificacion" class="form-label">Identificación (cédula o pasaporte)</label>
+            <input id="identificacion" type="text" class="form-control">
+          </div>
+
+          <div class="col-12">
+            <label for="nombre" class="form-label">Nombre completo</label>
+            <input id="nombre" type="text" class="form-control">
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label for="correo" class="form-label">Correo electrónico</label>
+            <input id="correo" type="email" class="form-control">
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label for="telefono" class="form-label">Teléfono</label>
+            <input id="telefono" type="tel" class="form-control">
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label for="direccion" class="form-label">Dirección</label>
+            <input id="direccion" type="text" class="form-control">
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label for="ciudad" class="form-label">Ciudad</label>
+            <select id="ciudad" class="form-select">
+              @for (ciudad of ciudades$ | async; track ciudad.id) {
+                <option [value]="ciudad.id">{{ ciudad.nombre }} - {{ ciudad.departamento }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label for="clave" class="form-label">Contraseña</label>
+            <input id="clave" type="password" class="form-control">
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label for="experiencia" class="form-label">Años de experiencia (solo agentes)</label>
+            <input id="experiencia" type="number" class="form-control" min="0">
+          </div>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2 mt-4">
+          <button type="button" class="btn btn-primary">Registrarme</button>
+          <a class="btn btn-outline-secondary" routerLink="/auth/login">Ya tengo cuenta</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
