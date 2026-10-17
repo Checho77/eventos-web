@@ -1,0 +1,20 @@
+.navbar-eventos {
+  background: linear-gradient(90deg, var(--color-primario-oscuro), var(--color-secundario));
+
+  .navbar-brand {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  .nav-link {
+    &:hover {
+      color: #fff;
+    }
+  }
+
+  .dropdown-item {
+    &.active {
+      background-color: var(--color-primario);
+    }
+  }
+}

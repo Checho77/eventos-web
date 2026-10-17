@@ -1,0 +1,33 @@
+<nav class="navbar navbar-expand-lg navbar-dark navbar-eventos">
+  <div class="container">
+    <a class="navbar-brand" routerLink="/">🎟️ EventosApp</a>
+
+    <button class="navbar-toggler" type="button"
+            data-bs-toggle="collapse" data-bs-target="#menuPrincipal"
+            aria-controls="menuPrincipal" aria-expanded="false" aria-label="Mostrar menú">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="menuPrincipal">
+      <ul class="navbar-nav ms-auto">
+        @for (modulo of modulos; track modulo.titulo) {
+          <li class="nav-item dropdown">
+            <button class="nav-link dropdown-toggle" type="button"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+              {{ modulo.titulo }}
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              @for (enlace of modulo.enlaces; track enlace.ruta) {
+                <li>
+                  <a class="dropdown-item" [routerLink]="enlace.ruta" routerLinkActive="active">
+                    {{ enlace.texto }}
+                  </a>
+                </li>
+              }
+            </ul>
+          </li>
+        }
+      </ul>
+    </div>
+  </div>
+</nav>
