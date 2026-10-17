@@ -1,0 +1,56 @@
+/* Estilos globales de EventosApp */
+
+:root {
+  --color-primario: #4f46e5;
+  --color-primario-oscuro: #3730a3;
+  --color-secundario: #9333ea;
+  --color-fondo: #f5f6fa;
+  --color-texto: #1f2937;
+  --color-suave: #6b7280;
+  --radio: 0.75rem;
+}
+
+body {
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  main {
+    flex: 1;
+  }
+}
+
+.titulo-pagina {
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.subtitulo-pagina {
+  color: var(--color-suave);
+  margin-bottom: 1.5rem;
+}
+
+.card {
+  border: none;
+  border-radius: var(--radio);
+}
+
+.btn-primary {
+  --bs-btn-bg: var(--color-primario);
+  --bs-btn-border-color: var(--color-primario);
+  --bs-btn-hover-bg: var(--color-primario-oscuro);
+  --bs-btn-hover-border-color: var(--color-primario-oscuro);
+  --bs-btn-active-bg: var(--color-primario-oscuro);
+  --bs-btn-active-border-color: var(--color-primario-oscuro);
+}
+
+.tabla-datos {
+  th {
+    white-space: nowrap;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: var(--color-suave);
+  }
+}
