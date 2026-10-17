@@ -8,13 +8,6 @@ y **Bases de Datos** – Unidad Central del Valle del Cauca (UCEVA).
 > por lo que la información se muestra con **datos mockeados** y los botones/formularios
 > son solo visuales.
 
-## Integrantes
-
-| Nombre completo | Código | Usuario de GitHub |
-|---|---|---|
-| _Integrante 1_ | _código_ | _@usuario_ |
-| _Integrante 2_ | _código_ | _@usuario_ |
-
 ## Tecnologías
 
 - Angular 20 (componentes *standalone*, `@for` / `@if`, rutas con `loadComponent`)
@@ -31,7 +24,7 @@ y **Bases de Datos** – Unidad Central del Valle del Cauca (UCEVA).
 ## Instalación y ejecución
 
 ```bash
-git clone <URL-DEL-REPOSITORIO>
+git clone https://github.com/Checho77/eventos-web.git
 cd eventos-web
 npm install
 ng serve
