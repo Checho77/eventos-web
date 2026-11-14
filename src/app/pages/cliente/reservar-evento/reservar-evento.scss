@@ -1,0 +1,14 @@
+.detalle {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.5rem 1rem;
+
+  dt {
+    color: var(--color-suave);
+    font-weight: 600;
+  }
+
+  dd {
+    margin: 0;
+  }
+}

@@ -1,0 +1,47 @@
+<header class="mb-4">
+  <h1 class="titulo-pagina h3">Mis reservas</h1>
+  <p class="subtitulo-pagina mb-0">
+    {{ cliente.nombreCompleto }} · {{ cliente.puntos }} puntos acumulados
+  </p>
+</header>
+
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0 tabla-datos">
+      <thead>
+        <tr>
+          <th>Reserva</th>
+          <th>Evento</th>
+          <th>Fecha de reserva</th>
+          <th class="text-center">Entradas</th>
+          <th>Valor total</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (reserva of reservas$ | async; track reserva.id) {
+          <tr>
+            <td>#{{ reserva.id }}</td>
+            <td>
+              <strong>{{ reserva.evento.nombre }}</strong><br>
+              <small class="text-muted">{{ reserva.evento.ciudad.nombre }}</small>
+            </td>
+            <td>{{ reserva.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td class="text-center">{{ reserva.numeroEntradas }}</td>
+            <td>{{ reserva.valorTotal | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+            <td>
+              <app-estado-badge [estado]="reserva.estado" />
+              @if (reserva.causaCancelacion) {
+                <div class="causa">{{ reserva.causaCancelacion }}</div>
+              }
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="6" class="text-center text-muted py-4">Aún no tienes reservas.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+<header class="encabezado">
+  <h1 class="titulo-pagina h3">Eventos disponibles</h1>
+  <p class="subtitulo-pagina">Elige un evento y realiza tu reserva</p>
+</header>
+
+<div class="row g-4">
+  @for (evento of eventos$ | async; track evento.id) {
+    <div class="col-12 col-md-6 col-lg-4">
+      <app-evento-card [evento]="evento" />
+    </div>
+  } @empty {
+    <div class="col-12">
+      <div class="alert alert-info">No hay eventos disponibles por el momento.</div>
+    </div>
+  }
+</div>
