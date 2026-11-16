@@ -5,7 +5,11 @@ import {
 } from "./reservas.repository";
 
 export class ReservasService {
-  async listar(filtros: { clienteId?: number | undefined; eventoId?: number | undefined; estado?: string | undefined }) {
+  async listar(filtros: {
+    clienteId?: number | undefined;
+    eventoId?: number | undefined;
+    estado?: string | undefined;
+  }) {
     return reservasRepository.listar(filtros);
   }
 
@@ -55,8 +59,37 @@ export class ReservasService {
     return reservasRepository.crear(datos, valorTotal);
   }
 
-  async actualizar(id: number, datos: DatosActualizarReserva) {
-    await this.buscarPorId(id);
+  async actualizar(
+    id: number,
+    datos: DatosActualizarReserva,
+    usuario?: { id: number; rol: string }
+  ) {
+    const existente = await this.buscarPorId(id);
+
+    // Validación de seguridad por pertenencia
+    if (usuario && usuario.rol === "cliente") {
+      if (existente.clienteId !== usuario.id) {
+        throw {
+          status: 403,
+          message: "No tienes permiso para modificar la reserva de otro usuario",
+        };
+      }
+      if (datos.estado && datos.estado !== "Cancelada") {
+        throw {
+          status: 403,
+          message: "Los clientes solo pueden solicitar la cancelación de su reserva",
+        };
+      }
+    }
+
+    // Validación de transiciones de estado:
+    // Si ya está Cancelada, no se puede reactivar
+    if (existente.estado === "Cancelada" && datos.estado && datos.estado !== "Cancelada") {
+      throw {
+        status: 400,
+        message: "Una reserva cancelada no puede reactivarse ni cambiar de estado",
+      };
+    }
 
     if (datos.estado && !["Reservada", "Confirmada", "Cancelada"].includes(datos.estado)) {
       throw { status: 400, message: "Estado de reserva inválido" };
@@ -64,7 +97,10 @@ export class ReservasService {
 
     if (datos.estado === "Cancelada") {
       if (!datos.causaCancelacion || datos.causaCancelacion.trim() === "") {
-        datos.causaCancelacion = "Cancelada por el usuario o agente";
+        datos.causaCancelacion =
+          usuario?.rol === "cliente"
+            ? "Cancelada por solicitud del cliente"
+            : "Cancelada por el administrador/agente";
       }
     }
 
@@ -72,8 +108,13 @@ export class ReservasService {
     return actualizada;
   }
 
-  async eliminar(id: number) {
-    await this.buscarPorId(id);
+  async eliminar(id: number, usuario?: { id: number; rol: string }) {
+    const existente = await this.buscarPorId(id);
+
+    if (usuario && usuario.rol === "cliente" && existente.clienteId !== usuario.id) {
+      throw { status: 403, message: "No tienes permiso para eliminar esta reserva" };
+    }
+
     return reservasRepository.eliminar(id);
   }
 }

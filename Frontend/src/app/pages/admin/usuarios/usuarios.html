@@ -1,0 +1,177 @@
+<header class="mb-4">
+  <h1 class="titulo-pagina h3">Gestión de Usuarios y Perfiles</h1>
+  <p class="subtitulo-pagina mb-0">Administración de Clientes, Agentes y Administradores en PostgreSQL</p>
+</header>
+
+<ul class="nav nav-pills mb-4 gap-2">
+  <li class="nav-item">
+    <button class="nav-link" [class.active]="tipo === 'clientes'" (click)="tipo = 'clientes'">Clientes</button>
+  </li>
+  <li class="nav-item">
+    <button class="nav-link" [class.active]="tipo === 'agentes'" (click)="tipo = 'agentes'">Agentes</button>
+  </li>
+  <li class="nav-item">
+    <button class="nav-link" [class.active]="tipo === 'administradores'" (click)="tipo = 'administradores'">Administradores</button>
+  </li>
+</ul>
+
+<!-- ================= CLIENTES ================= -->
+@if (tipo === 'clientes') {
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h2 class="h5 mb-3">Listado de Clientes Registrados</h2>
+      <div class="table-responsive">
+        <table class="table table-sm align-middle mb-0 tabla-datos">
+          <thead>
+            <tr><th>ID</th><th>Nombre</th><th>Correo</th><th>Ciudad</th><th>Puntos</th><th>Publicidad</th><th class="text-end">Acciones</th></tr>
+          </thead>
+          <tbody>
+            @for (c of clientes$ | async; track c.id) {
+              <tr>
+                <td>#{{ c.id }}</td>
+                <td><strong>{{ c.nombreCompleto }}</strong><br><small class="text-muted">{{ c.identificacion }}</small></td>
+                <td>{{ c.correo }}</td>
+                <td>{{ c.ciudad }}</td>
+                <td>
+                  @if (clienteEditando?.id === c.id) {
+                    <input type="number" class="form-control form-control-sm" style="width: 90px;" [(ngModel)]="clienteEditando.puntos" />
+                  } @else {
+                    <span class="badge bg-secondary">{{ c.puntos }} pts</span>
+                  }
+                </td>
+                <td>
+                  @if (clienteEditando?.id === c.id) {
+                    <select class="form-select form-select-sm" style="width: 100px;" [(ngModel)]="clienteEditando.visualizaPublicidad">
+                      <option [ngValue]="true">Sí</option>
+                      <option [ngValue]="false">No</option>
+                    </select>
+                  } @else {
+                    {{ c.visualizaPublicidad ? 'Sí' : 'No' }}
+                  }
+                </td>
+                <td class="text-end">
+                  @if (clienteEditando?.id === c.id) {
+                    <div class="d-flex justify-content-end gap-1">
+                      <button class="btn btn-success btn-sm" (click)="guardarCliente()">Guardar</button>
+                      <button class="btn btn-secondary btn-sm" (click)="clienteEditando = null">✕</button>
+                    </div>
+                  } @else {
+                    <div class="d-flex justify-content-end gap-1">
+                      <button class="btn btn-outline-primary btn-sm" (click)="iniciarEditarCliente(c)">Editar</button>
+                      <button class="btn btn-outline-danger btn-sm" (click)="eliminarCliente(c.id)">Eliminar</button>
+                    </div>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ================= AGENTES ================= -->
+@if (tipo === 'agentes') {
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h2 class="h5 mb-3">Listado de Agentes Registrados</h2>
+      <div class="table-responsive">
+        <table class="table table-sm align-middle mb-0 tabla-datos">
+          <thead>
+            <tr><th>ID</th><th>Nombre</th><th>Correo</th><th>Ciudad</th><th>Comisión (%)</th><th>Experiencia (Años)</th><th class="text-end">Acciones</th></tr>
+          </thead>
+          <tbody>
+            @for (a of agentes$ | async; track a.id) {
+              <tr>
+                <td>#{{ a.id }}</td>
+                <td><strong>{{ a.nombreCompleto }}</strong><br><small class="text-muted">{{ a.identificacion }}</small></td>
+                <td>{{ a.correo }}</td>
+                <td>{{ a.ciudad }}</td>
+                <td>
+                  @if (agenteEditando?.id === a.id) {
+                    <input type="number" class="form-control form-control-sm" style="width: 80px;" [(ngModel)]="agenteEditando.comision" />
+                  } @else {
+                    {{ a.comision }}%
+                  }
+                </td>
+                <td>
+                  @if (agenteEditando?.id === a.id) {
+                    <input type="number" class="form-control form-control-sm" style="width: 80px;" [(ngModel)]="agenteEditando.experiencia" />
+                  } @else {
+                    {{ a.experiencia }} años
+                  }
+                </td>
+                <td class="text-end">
+                  @if (agenteEditando?.id === a.id) {
+                    <div class="d-flex justify-content-end gap-1">
+                      <button class="btn btn-success btn-sm" (click)="guardarAgente()">Guardar</button>
+                      <button class="btn btn-secondary btn-sm" (click)="agenteEditando = null">✕</button>
+                    </div>
+                  } @else {
+                    <div class="d-flex justify-content-end gap-1">
+                      <button class="btn btn-outline-primary btn-sm" (click)="iniciarEditarAgente(a)">Editar</button>
+                      <button class="btn btn-outline-danger btn-sm" (click)="eliminarAgente(a.id)">Eliminar</button>
+                    </div>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ================= ADMINISTRADORES ================= -->
+@if (tipo === 'administradores') {
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h2 class="h5 mb-3">Listado de Administradores</h2>
+      <div class="table-responsive">
+        <table class="table table-sm align-middle mb-0 tabla-datos">
+          <thead>
+            <tr><th>ID</th><th>Nombre</th><th>Correo</th><th>Salario</th><th>Horario</th><th class="text-end">Acciones</th></tr>
+          </thead>
+          <tbody>
+            @for (adm of administradores$ | async; track adm.id) {
+              <tr>
+                <td>#{{ adm.id }}</td>
+                <td><strong>{{ adm.nombreCompleto }}</strong><br><small class="text-muted">{{ adm.identificacion }}</small></td>
+                <td>{{ adm.correo }}</td>
+                <td>
+                  @if (adminEditando?.id === adm.id) {
+                    <input type="number" class="form-control form-control-sm" [(ngModel)]="adminEditando.salario" />
+                  } @else {
+                    {{ adm.salario | currency:'COP':'symbol-narrow':'1.0-0' }}
+                  }
+                </td>
+                <td>
+                  @if (adminEditando?.id === adm.id) {
+                    <input type="text" class="form-control form-control-sm" [(ngModel)]="adminEditando.horario" />
+                  } @else {
+                    {{ adm.horario }}
+                  }
+                </td>
+                <td class="text-end">
+                  @if (adminEditando?.id === adm.id) {
+                    <div class="d-flex justify-content-end gap-1">
+                      <button class="btn btn-success btn-sm" (click)="guardarAdmin()">Guardar</button>
+                      <button class="btn btn-secondary btn-sm" (click)="adminEditando = null">✕</button>
+                    </div>
+                  } @else {
+                    <div class="d-flex justify-content-end gap-1">
+                      <button class="btn btn-outline-primary btn-sm" (click)="iniciarEditarAdmin(adm)">Editar</button>
+                      <button class="btn btn-outline-danger btn-sm" (click)="eliminarAdmin(adm.id)">Eliminar</button>
+                    </div>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+}

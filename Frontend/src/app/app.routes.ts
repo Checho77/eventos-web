@@ -88,6 +88,11 @@ export const routes: Routes = [
         path: 'localizacion',
         title: 'Localización | EventosApp',
         loadComponent: () => import('./pages/admin/localizacion/localizacion').then(m => m.AdminLocalizacion)
+      },
+      {
+        path: 'usuarios',
+        title: 'Usuarios y Perfiles | EventosApp',
+        loadComponent: () => import('./pages/admin/usuarios/usuarios').then(m => m.AdminUsuarios)
       }
     ]
   },

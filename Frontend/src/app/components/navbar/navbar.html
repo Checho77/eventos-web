@@ -10,7 +10,7 @@
 
     <div class="collapse navbar-collapse" id="menuPrincipal">
       <ul class="navbar-nav ms-auto align-items-lg-center">
-        @for (modulo of modulos; track modulo.titulo) {
+        @for (modulo of modulos(); track modulo.titulo) {
           <li class="nav-item dropdown">
             <button class="nav-link dropdown-toggle" type="button"
                     data-bs-toggle="dropdown" aria-expanded="false">
@@ -28,7 +28,7 @@
           </li>
         }
 
-        @if (usuarioService.obtenerSesion(); as sesion) {
+        @if (usuarioService.sesion(); as sesion) {
           <li class="nav-item ms-lg-3 mt-2 mt-lg-0 d-flex align-items-center gap-2">
             <span class="badge bg-light text-dark px-2 py-1 small">
               👤 {{ sesion.nombreCompleto }} ({{ sesion.rol }})

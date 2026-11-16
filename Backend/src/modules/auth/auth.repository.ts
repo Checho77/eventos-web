@@ -8,6 +8,8 @@ export interface NuevoCliente {
   ciudadId: number;
   passwordHash: string;
   telefonos: string[];
+  rol?: "cliente" | "agente";
+  experiencia?: number;
 }
 
 export interface ActualizarUsuario {
@@ -133,7 +135,14 @@ export const authRepository = {
         );
       }
 
-      await client.query("INSERT INTO clientes (persona_id) VALUES ($1)", [personaId]);
+      if (datos.rol === "agente") {
+        await client.query(
+          "INSERT INTO agentes (persona_id, comision, experiencia) VALUES ($1, 8.0, $2)",
+          [personaId, datos.experiencia ?? 0]
+        );
+      } else {
+        await client.query("INSERT INTO clientes (persona_id) VALUES ($1)", [personaId]);
+      }
 
       await client.query("COMMIT");
       return personaId;

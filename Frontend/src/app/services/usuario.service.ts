@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -10,31 +10,34 @@ export class UsuarioService {
   private router = inject(Router);
   private apiUrl = 'http://localhost:3000/api/auth';
 
-  private usuarioLogueado: any = null;
-
-  constructor() {
+  private cargarSesion(): any {
     try {
-      const guardado = typeof localStorage !== 'undefined' ? localStorage.getItem('usuario_actual') : null;
-      if (guardado) {
-        this.usuarioLogueado = JSON.parse(guardado);
+      if (typeof localStorage === 'undefined') return null;
+      const guardado = localStorage.getItem('usuario_actual');
+      const token = localStorage.getItem('auth_token');
+      if (token && guardado) {
+        return JSON.parse(guardado);
       }
+      return null;
     } catch {
-      this.usuarioLogueado = null;
+      return null;
     }
   }
 
+  readonly sesion = signal<any>(this.cargarSesion());
+  readonly rol = computed<string | null>(() => this.sesion()?.rol ?? null);
+  readonly autenticado = computed<boolean>(() => Boolean(this.sesion()));
+
   estaAutenticado(): boolean {
-    if (typeof localStorage === 'undefined') return false;
-    const token = localStorage.getItem('auth_token');
-    return Boolean(token && this.usuarioLogueado);
+    return Boolean(this.sesion());
   }
 
   obtenerSesion(): any {
-    return this.usuarioLogueado;
+    return this.sesion();
   }
 
   obtenerRol(): string | null {
-    return this.usuarioLogueado?.rol ?? null;
+    return this.rol();
   }
 
   login(correo: string, password: string): Observable<any> {
@@ -43,7 +46,7 @@ export class UsuarioService {
         if (res?.token && typeof localStorage !== 'undefined') {
           localStorage.setItem('auth_token', res.token);
           localStorage.setItem('usuario_actual', JSON.stringify(res.usuario));
-          this.usuarioLogueado = res.usuario;
+          this.sesion.set(res.usuario);
         }
       })
     );
@@ -58,25 +61,61 @@ export class UsuarioService {
       localStorage.removeItem('auth_token');
       localStorage.removeItem('usuario_actual');
     }
-    this.usuarioLogueado = null;
+    this.sesion.set(null);
     this.router.navigate(['/auth/login']);
   }
 
   clienteActual(): any {
-    if (this.usuarioLogueado) return this.usuarioLogueado;
+    const s = this.sesion();
+    if (s) return s;
     this.router.navigate(['/auth/login']);
     return { id: 0, nombreCompleto: '', puntos: 0 };
   }
 
   agenteActual(): any {
-    if (this.usuarioLogueado) return this.usuarioLogueado;
+    const s = this.sesion();
+    if (s) return s;
     this.router.navigate(['/auth/login']);
     return { id: 0, nombreCompleto: '' };
   }
 
   administradorActual(): any {
-    if (this.usuarioLogueado) return this.usuarioLogueado;
+    const s = this.sesion();
+    if (s) return s;
     this.router.navigate(['/auth/login']);
     return { id: 0, nombreCompleto: '' };
+  }
+
+  // ---------- GESTIÓN CRUD DE PERFILES (ADMIN) ----------
+  private apiPerfilesUrl = 'http://localhost:3000/api';
+
+  listarClientes(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiPerfilesUrl}/clientes`);
+  }
+  actualizarCliente(id: number, datos: any): Observable<any> {
+    return this.http.put<any>(`${this.apiPerfilesUrl}/clientes/${id}`, datos);
+  }
+  eliminarCliente(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiPerfilesUrl}/clientes/${id}`);
+  }
+
+  listarAgentes(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiPerfilesUrl}/agentes`);
+  }
+  actualizarAgente(id: number, datos: any): Observable<any> {
+    return this.http.put<any>(`${this.apiPerfilesUrl}/agentes/${id}`, datos);
+  }
+  eliminarAgente(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiPerfilesUrl}/agentes/${id}`);
+  }
+
+  listarAdministradores(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiPerfilesUrl}/administradores`);
+  }
+  actualizarAdministrador(id: number, datos: any): Observable<any> {
+    return this.http.put<any>(`${this.apiPerfilesUrl}/administradores/${id}`, datos);
+  }
+  eliminarAdministrador(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiPerfilesUrl}/administradores/${id}`);
   }
 }

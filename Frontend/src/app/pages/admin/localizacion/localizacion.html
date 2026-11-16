@@ -1,6 +1,6 @@
 <header class="mb-4">
   <h1 class="titulo-pagina h3">Administración de Localización</h1>
-  <p class="subtitulo-pagina mb-0">Gestión de Países, Departamentos y Ciudades en la base de datos</p>
+  <p class="subtitulo-pagina mb-0">Gestión de Países, Departamentos y Ciudades (CRUD completo)</p>
 </header>
 
 @if (errorMensaje) {
@@ -38,14 +38,27 @@
       <div class="card shadow-sm"><div class="card-body">
         <h2 class="h5 mb-3">Listado de países</h2>
         <table class="table table-sm align-middle mb-0 tabla-datos">
-          <thead><tr><th>ID</th><th>País</th><th class="text-end">Acción</th></tr></thead>
+          <thead><tr><th>ID</th><th>País</th><th class="text-end">Acciones</th></tr></thead>
           <tbody>
             @for (p of paises$ | async; track p.id) {
               <tr>
                 <td>#{{ p.id }}</td>
-                <td><strong>{{ p.nombre }}</strong></td>
+                <td>
+                  @if (paisEditandoId === p.id) {
+                    <div class="d-flex gap-1">
+                      <input type="text" class="form-control form-control-sm" [(ngModel)]="paisEditandoNombre" />
+                      <button class="btn btn-success btn-sm" (click)="guardarEditarPais()">✓</button>
+                      <button class="btn btn-secondary btn-sm" (click)="paisEditandoId = null">✕</button>
+                    </div>
+                  } @else {
+                    <strong>{{ p.nombre }}</strong>
+                  }
+                </td>
                 <td class="text-end">
-                  <button class="btn btn-outline-danger btn-sm" (click)="eliminarPais(p.id)">Eliminar</button>
+                  <div class="d-flex justify-content-end gap-1">
+                    <button class="btn btn-outline-primary btn-sm" (click)="iniciarEditarPais(p)">Editar</button>
+                    <button class="btn btn-outline-danger btn-sm" (click)="eliminarPais(p.id)">Eliminar</button>
+                  </div>
                 </td>
               </tr>
             }
@@ -84,15 +97,28 @@
       <div class="card shadow-sm"><div class="card-body">
         <h2 class="h5 mb-3">Listado de departamentos</h2>
         <table class="table table-sm align-middle mb-0 tabla-datos">
-          <thead><tr><th>ID</th><th>Departamento</th><th>País</th><th class="text-end">Acción</th></tr></thead>
+          <thead><tr><th>ID</th><th>Departamento</th><th>País</th><th class="text-end">Acciones</th></tr></thead>
           <tbody>
             @for (d of departamentos$ | async; track d.id) {
               <tr>
                 <td>#{{ d.id }}</td>
-                <td><strong>{{ d.nombre }}</strong></td>
+                <td>
+                  @if (deptoEditandoId === d.id) {
+                    <div class="d-flex gap-1">
+                      <input type="text" class="form-control form-control-sm" [(ngModel)]="deptoEditandoNombre" />
+                      <button class="btn btn-success btn-sm" (click)="guardarEditarDepto()">✓</button>
+                      <button class="btn btn-secondary btn-sm" (click)="deptoEditandoId = null">✕</button>
+                    </div>
+                  } @else {
+                    <strong>{{ d.nombre }}</strong>
+                  }
+                </td>
                 <td>{{ d.paisNombre || 'Asociado' }}</td>
                 <td class="text-end">
-                  <button class="btn btn-outline-danger btn-sm" (click)="eliminarDepartamento(d.id)">Eliminar</button>
+                  <div class="d-flex justify-content-end gap-1">
+                    <button class="btn btn-outline-primary btn-sm" (click)="iniciarEditarDepto(d)">Editar</button>
+                    <button class="btn btn-outline-danger btn-sm" (click)="eliminarDepartamento(d.id)">Eliminar</button>
+                  </div>
                 </td>
               </tr>
             }
@@ -131,16 +157,29 @@
       <div class="card shadow-sm"><div class="card-body">
         <h2 class="h5 mb-3">Listado de ciudades</h2>
         <table class="table table-sm align-middle mb-0 tabla-datos">
-          <thead><tr><th>ID</th><th>Ciudad</th><th>Departamento</th><th>País</th><th class="text-end">Acción</th></tr></thead>
+          <thead><tr><th>ID</th><th>Ciudad</th><th>Departamento</th><th>País</th><th class="text-end">Acciones</th></tr></thead>
           <tbody>
             @for (c of ciudades$ | async; track c.id) {
               <tr>
                 <td>#{{ c.id }}</td>
-                <td><strong>{{ c.nombre }}</strong></td>
+                <td>
+                  @if (ciudadEditandoId === c.id) {
+                    <div class="d-flex gap-1">
+                      <input type="text" class="form-control form-control-sm" [(ngModel)]="ciudadEditandoNombre" />
+                      <button class="btn btn-success btn-sm" (click)="guardarEditarCiudad()">✓</button>
+                      <button class="btn btn-secondary btn-sm" (click)="ciudadEditandoId = null">✕</button>
+                    </div>
+                  } @else {
+                    <strong>{{ c.nombre }}</strong>
+                  }
+                </td>
                 <td>{{ c.departamento }}</td>
                 <td>{{ c.pais }}</td>
                 <td class="text-end">
-                  <button class="btn btn-outline-danger btn-sm" (click)="eliminarCiudad(c.id)">Eliminar</button>
+                  <div class="d-flex justify-content-end gap-1">
+                    <button class="btn btn-outline-primary btn-sm" (click)="iniciarEditarCiudad(c)">Editar</button>
+                    <button class="btn btn-outline-danger btn-sm" (click)="eliminarCiudad(c.id)">Eliminar</button>
+                  </div>
                 </td>
               </tr>
             }

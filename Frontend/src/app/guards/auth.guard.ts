@@ -27,10 +27,16 @@ export const rolGuard: CanActivateFn = (route, _state) => {
   }
 
   if (rolesPermitidos && !rolesPermitidos.includes(sesion.rol)) {
-    alert(`Acceso denegado: esta vista es exclusiva para el rol ${rolesPermitidos.join(' o ')}.`);
-    if (sesion.rol === 'cliente') router.navigate(['/cliente/eventos']);
-    else if (sesion.rol === 'agente') router.navigate(['/agente/eventos']);
-    else router.navigate(['/admin/dashboard']);
+    // Redirigir de manera silenciosa y limpia según el rol correspondiente
+    if (sesion.rol === 'cliente') {
+      router.navigate(['/cliente/eventos']);
+    } else if (sesion.rol === 'agente') {
+      router.navigate(['/agente/eventos']);
+    } else if (sesion.rol === 'administrador') {
+      router.navigate(['/admin/dashboard']);
+    } else {
+      router.navigate(['/auth/login']);
+    }
     return false;
   }
 

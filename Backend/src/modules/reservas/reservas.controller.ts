@@ -4,9 +4,15 @@ import { reservasService } from "./reservas.service";
 export class ReservasController {
   async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const clienteId = req.query.clienteId ? Number(req.query.clienteId) : undefined;
+      const usuario = (req as any).usuario;
+      let clienteId = req.query.clienteId ? Number(req.query.clienteId) : undefined;
       const eventoId = req.query.eventoId ? Number(req.query.eventoId) : undefined;
       const estado = typeof req.query.estado === "string" ? req.query.estado : undefined;
+
+      // Seguridad: Si el rol es cliente, solo puede consultar sus propias reservas
+      if (usuario && usuario.rol === "cliente") {
+        clienteId = usuario.id;
+      }
 
       const reservas = await reservasService.listar({ clienteId, eventoId, estado });
       res.status(200).json(reservas);
@@ -24,6 +30,14 @@ export class ReservasController {
       }
 
       const reserva = await reservasService.buscarPorId(id);
+      const usuario = (req as any).usuario;
+
+      // Seguridad: Si es cliente, solo puede ver su propia reserva
+      if (usuario && usuario.rol === "cliente" && reserva.clienteId !== usuario.id) {
+        res.status(403).json({ error: "No tienes permiso para ver esta reserva" });
+        return;
+      }
+
       res.status(200).json(reserva);
     } catch (error: any) {
       if (error?.status) {
@@ -37,8 +51,11 @@ export class ReservasController {
   async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { eventoId, numeroEntradas, observaciones } = req.body;
-      // Si el usuario está autenticado por token, usamos su id; si viene en el body, lo tomamos del body
-      const clienteId = (req as any).usuario?.id ?? Number(req.body.clienteId);
+      const usuario = (req as any).usuario;
+
+      // Si es cliente autenticado, siempre toma su propio ID del token
+      const clienteId =
+        usuario?.rol === "cliente" ? usuario.id : Number(req.body.clienteId) || usuario?.id;
 
       const nuevaReserva = await reservasService.crear({
         clienteId,
@@ -66,11 +83,15 @@ export class ReservasController {
       }
 
       const { estado, observaciones, causaCancelacion } = req.body;
-      const actualizada = await reservasService.actualizar(id, {
-        estado,
-        observaciones,
-        causaCancelacion,
-      });
+      const actualizada = await reservasService.actualizar(
+        id,
+        {
+          estado,
+          observaciones,
+          causaCancelacion,
+        },
+        (req as any).usuario
+      );
 
       res.status(200).json(actualizada);
     } catch (error: any) {
@@ -90,7 +111,7 @@ export class ReservasController {
         return;
       }
 
-      await reservasService.eliminar(id);
+      await reservasService.eliminar(id, (req as any).usuario);
       res.status(204).send();
     } catch (error: any) {
       if (error?.status) {

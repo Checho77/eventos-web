@@ -42,6 +42,12 @@ export class AuthService {
       throw { status: 400, message: "La contraseña debe tener al menos 6 caracteres" };
     }
 
+    const rol =
+      body.rol === "agente" || body.tipo === "Agente" || body.tipo === "agente"
+        ? "agente"
+        : "cliente";
+    const experiencia = Number(body.experiencia) || 0;
+
     const passwordHash = await bcrypt.hash(password, 10);
     const id = await authRepository.registrarCliente({
       identificacion,
@@ -51,6 +57,8 @@ export class AuthService {
       ciudadId,
       passwordHash,
       telefonos,
+      rol,
+      experiencia,
     });
 
     return this.buscarPorId(id);

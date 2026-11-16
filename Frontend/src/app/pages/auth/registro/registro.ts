@@ -49,6 +49,8 @@ export class Registro {
     this.errorMensaje = '';
 
     const datos = {
+      tipo: this.tipo,
+      rol: this.tipo.toLowerCase(),
       identificacion: this.identificacion.trim(),
       nombreCompleto: this.nombreCompleto.trim(),
       correo: this.correo.trim(),
@@ -56,6 +58,7 @@ export class Registro {
       ciudadId: this.ciudadId,
       password: this.clave,
       telefonos: this.telefono.trim() ? [this.telefono.trim()] : [],
+      experiencia: this.tipo === 'Agente' ? Number(this.experiencia) || 0 : undefined,
     };
 
     this.usuarioService.registro(datos).subscribe({
