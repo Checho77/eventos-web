@@ -4,6 +4,7 @@
   "description": "API REST de EventosApp (Express + TypeScript + PostgreSQL)",
   "main": "index.js",
   "scripts": {
+    "dev": "tsnd --transpile-only src/server.ts",
     "start": "tsnd --respawn --clear src/app.ts",
     "db:init": "tsnd --transpile-only src/scripts/init-db.ts",
     "db:seed": "tsnd --transpile-only src/scripts/seed-db.ts"
