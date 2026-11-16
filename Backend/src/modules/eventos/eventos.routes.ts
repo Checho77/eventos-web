@@ -1,11 +1,20 @@
 import { Router } from "express";
 import { eventosController } from "./eventos.controller";
+import { autenticar, requiereRol } from "../../middlewares/auth.middleware";
 
 export const eventosRoutes = Router();
 
-// 5 Operaciones CRUD según la rúbrica del proyecto
+// Consultar eventos (público para exploración de cartelera)
 eventosRoutes.get("/", (req, res, next) => eventosController.getAll(req, res, next));
 eventosRoutes.get("/:id", (req, res, next) => eventosController.getById(req, res, next));
-eventosRoutes.post("/", (req, res, next) => eventosController.create(req, res, next));
-eventosRoutes.put("/:id", (req, res, next) => eventosController.update(req, res, next));
-eventosRoutes.delete("/:id", (req, res, next) => eventosController.delete(req, res, next));
+
+// Crear, editar y eliminar eventos (exclusivo para agentes y administradores)
+eventosRoutes.post("/", autenticar, requiereRol("agente", "administrador"), (req, res, next) =>
+  eventosController.create(req, res, next)
+);
+eventosRoutes.put("/:id", autenticar, requiereRol("agente", "administrador"), (req, res, next) =>
+  eventosController.update(req, res, next)
+);
+eventosRoutes.delete("/:id", autenticar, requiereRol("agente", "administrador"), (req, res, next) =>
+  eventosController.delete(req, res, next)
+);

@@ -179,6 +179,27 @@
         </table>
       </div>
     </div></div>
+
+    <div class="card shadow-sm mt-4"><div class="card-body">
+      <h2 class="h5 mb-3">Resumen de cobertura (Eventos por País, Departamento y Ciudad)</h2>
+      <div class="table-responsive">
+        <table class="table table-sm align-middle mb-0 tabla-datos">
+          <thead>
+            <tr><th>País</th><th>Departamento</th><th>Ciudad</th><th class="text-end">Total eventos registrados</th></tr>
+          </thead>
+          <tbody>
+            @for (ub of eventosUbicacion$ | async; track $index) {
+              <tr>
+                <td>{{ ub.pais }}</td>
+                <td>{{ ub.departamento }}</td>
+                <td>{{ ub.ciudad }}</td>
+                <td class="text-end fw-bold">{{ ub.eventos }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div></div>
   </div>
 
   <!-- ============ RESERVAS Y OPERACIÓN ============ -->

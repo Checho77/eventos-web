@@ -35,6 +35,7 @@ export class Dashboard {
   promedioClientes$ = this.reporteService.promedioPorCliente();
   reservasEventoMes$ = this.reporteService.reservasPorEventoMes();
   eventosAgenteCiudad$ = this.reporteService.eventosPorAgenteCiudad();
+  eventosUbicacion$ = this.reporteService.eventosPorUbicacion();
 
   /** Cobertura y eventos */
   eventos$ = this.eventoService.listar();

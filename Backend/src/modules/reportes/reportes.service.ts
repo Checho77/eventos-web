@@ -24,6 +24,10 @@ export class ReportesService {
   async obtenerEventosPorAgenteCiudad() {
     return reportesRepository.eventosPorAgenteCiudad();
   }
+
+  async obtenerEventosPorUbicacion() {
+    return reportesRepository.eventosPorUbicacion();
+  }
 }
 
 export const reportesService = new ReportesService();

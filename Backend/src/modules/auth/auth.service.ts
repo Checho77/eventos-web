@@ -5,7 +5,8 @@ import { authRepository, NuevoCliente, ActualizarUsuario } from "./auth.reposito
 
 export class AuthService {
   async listar() {
-    return authRepository.listar();
+    const usuarios = await authRepository.listar();
+    return usuarios.map(({ passwordHash, ...u }: any) => u);
   }
 
   async buscarPorId(id: number) {

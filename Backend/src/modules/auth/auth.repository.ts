@@ -51,16 +51,15 @@ const SELECT_USUARIO_COMPLETO = `
   LEFT JOIN clientes c        ON c.persona_id = p.id
 `;
 
-function mapearUsuario(row: any) {
+function mapearUsuario(row: any, incluirHash = false) {
   if (!row) return null;
-  return {
+  const user: any = {
     id: row.id,
     identificacion: row.identificacion,
     nombreCompleto: row.nombreCompleto,
     correo: row.correo,
     direccion: row.direccion,
     rol: row.rol,
-    passwordHash: row.passwordHash,
     telefonos: Array.isArray(row.telefonos) ? row.telefonos : [],
     ciudad: {
       id: row.ciudadId,
@@ -76,12 +75,18 @@ function mapearUsuario(row: any) {
     salario: row.salario !== null ? Number(row.salario) : undefined,
     horario: row.horario ?? undefined,
   };
+
+  if (incluirHash) {
+    user.passwordHash = row.passwordHash;
+  }
+
+  return user;
 }
 
 export const authRepository = {
   async listar() {
     const { rows } = await pool.query(`${SELECT_USUARIO_COMPLETO} ORDER BY p.id`);
-    return rows.map(mapearUsuario);
+    return rows.map((r) => mapearUsuario(r, false));
   },
 
   async buscarPorCorreo(correo: string) {
@@ -89,7 +94,7 @@ export const authRepository = {
       `${SELECT_USUARIO_COMPLETO} WHERE p.correo = $1`,
       [correo]
     );
-    return mapearUsuario(rows[0]);
+    return mapearUsuario(rows[0], true);
   },
 
   async buscarPorId(id: number) {
@@ -97,7 +102,7 @@ export const authRepository = {
       `${SELECT_USUARIO_COMPLETO} WHERE p.id = $1`,
       [id]
     );
-    return mapearUsuario(rows[0]);
+    return mapearUsuario(rows[0], false);
   },
 
   async registrarCliente(datos: NuevoCliente) {

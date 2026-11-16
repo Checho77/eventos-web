@@ -1,9 +1,10 @@
 import { Routes } from '@angular/router';
+import { authGuard, rolGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'auth/login' },
 
-  /** Módulo de autenticación */
+  /** Módulo de autenticación (público) */
   {
     path: 'auth',
     children: [
@@ -21,9 +22,11 @@ export const routes: Routes = [
     ]
   },
 
-  /** Módulo del cliente */
+  /** Módulo del cliente (requiere autenticación y rol cliente o administrador) */
   {
     path: 'cliente',
+    canActivate: [authGuard, rolGuard],
+    data: { roles: ['cliente', 'administrador'] },
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'eventos' },
       {
@@ -44,9 +47,11 @@ export const routes: Routes = [
     ]
   },
 
-  /** Módulo del agente */
+  /** Módulo del agente (requiere autenticación y rol agente o administrador) */
   {
     path: 'agente',
+    canActivate: [authGuard, rolGuard],
+    data: { roles: ['agente', 'administrador'] },
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'eventos' },
       {
@@ -67,15 +72,22 @@ export const routes: Routes = [
     ]
   },
 
-  /** Módulo del administrador */
+  /** Módulo del administrador (exclusivo para rol administrador) */
   {
     path: 'admin',
+    canActivate: [authGuard, rolGuard],
+    data: { roles: ['administrador'] },
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
       {
         path: 'dashboard',
         title: 'Reportes | EventosApp',
         loadComponent: () => import('./pages/admin/dashboard/dashboard').then(m => m.Dashboard)
+      },
+      {
+        path: 'localizacion',
+        title: 'Localización | EventosApp',
+        loadComponent: () => import('./pages/admin/localizacion/localizacion').then(m => m.AdminLocalizacion)
       }
     ]
   },

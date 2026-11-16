@@ -55,6 +55,15 @@ export class ReportesController {
       next(error);
     }
   }
+
+  async getEventosPorUbicacion(_req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const data = await reportesService.obtenerEventosPorUbicacion();
+      res.status(200).json(data);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export const reportesController = new ReportesController();

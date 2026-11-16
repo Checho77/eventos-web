@@ -9,6 +9,13 @@ import {
   ResumenSistema,
 } from '../models/reportes';
 
+export interface EventosUbicacion {
+  pais: string;
+  departamento: string;
+  ciudad: string;
+  eventos: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ReporteService {
   private http = inject(HttpClient);
@@ -38,11 +45,7 @@ export class ReporteService {
     return this.http.get<EventosAgenteCiudad[]>(`${this.apiUrl}/eventos-agente-ciudad`);
   }
 
-  ingresoMensualMaximo(): number {
-    return 1000000;
-  }
-
-  ingresosTotales(): number {
-    return 0;
+  eventosPorUbicacion(): Observable<EventosUbicacion[]> {
+    return this.http.get<EventosUbicacion[]>(`${this.apiUrl}/eventos-por-ubicacion`);
   }
 }

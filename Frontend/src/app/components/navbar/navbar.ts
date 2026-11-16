@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { UsuarioService } from '../../services/usuario.service';
 
 type EnlaceNav = { texto: string; ruta: string };
 type ModuloNav = { titulo: string; enlaces: EnlaceNav[] };
@@ -11,6 +12,8 @@ type ModuloNav = { titulo: string; enlaces: EnlaceNav[] };
   styleUrl: './navbar.scss'
 })
 export class Navbar {
+  usuarioService = inject(UsuarioService);
+
   modulos: ModuloNav[] = [
     {
       titulo: 'Autenticación',
@@ -37,8 +40,13 @@ export class Navbar {
     {
       titulo: 'Administrador',
       enlaces: [
-        { texto: 'Reportes', ruta: '/admin/dashboard' }
+        { texto: 'Reportes', ruta: '/admin/dashboard' },
+        { texto: 'Localización', ruta: '/admin/localizacion' }
       ]
     }
   ];
+
+  cerrarSesion(): void {
+    this.usuarioService.cerrarSesion();
+  }
 }

@@ -32,7 +32,7 @@ INSERT INTO personas (id, identificacion, nombre_completo, correo, direccion, ci
   (3, '52123456',   'Marta Rojas',      'marta.rojas@email.com',         'Avenida 80 # 45-12',  2, '$2b$10$C.waRqhCKt9bwxxvltxVUe6KjFno2HwOSQJZyPlIA4fDE5FxbBHDK'),
   (4, '1144556677', 'Andrés Cifuentes', 'andres.cifuentes@eventos.com',  'Calle 5 # 38-10',     1, '$2b$10$C.waRqhCKt9bwxxvltxVUe6KjFno2HwOSQJZyPlIA4fDE5FxbBHDK'),
   (5, '1088990011', 'Valentina Mora',   'valentina.mora@eventos.com',    'Carrera 43A # 1-50',  3, '$2b$10$C.waRqhCKt9bwxxvltxVUe6KjFno2HwOSQJZyPlIA4fDE5FxbBHDK'),
-  (6, '1122334455', 'Sergio Álvarez',   'admin@eventos.com',             'Calle 10 # 4-20',     1, '$2b$10$C.waRqhCKt9bwxxvltxVUe6KjFno2HwOSQJZyPlIA4fDE5FxbBHDK');
+  (6, '1122334455', 'Sergio David Castro', 'admin@eventos.com',             'Calle 10 # 4-20',     1, '$2b$10$C.waRqhCKt9bwxxvltxVUe6KjFno2HwOSQJZyPlIA4fDE5FxbBHDK');
 
 INSERT INTO telefonos (persona_id, telefono) VALUES
   (1, '3001234567'), (1, '3157654321'),

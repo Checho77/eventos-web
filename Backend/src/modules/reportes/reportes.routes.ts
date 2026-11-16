@@ -1,7 +1,11 @@
 import { Router } from "express";
 import { reportesController } from "./reportes.controller";
+import { autenticar, requiereRol } from "../../middlewares/auth.middleware";
 
 export const reportesRoutes = Router();
+
+// Los reportes son de acceso exclusivo para el rol administrador
+reportesRoutes.use(autenticar, requiereRol("administrador"));
 
 reportesRoutes.get("/resumen", (req, res, next) => reportesController.getResumen(req, res, next));
 reportesRoutes.get("/ingresos-mensuales", (req, res, next) =>
@@ -18,4 +22,7 @@ reportesRoutes.get("/reservas-evento-mes", (req, res, next) =>
 );
 reportesRoutes.get("/eventos-agente-ciudad", (req, res, next) =>
   reportesController.getEventosPorAgenteCiudad(req, res, next)
+);
+reportesRoutes.get("/eventos-por-ubicacion", (req, res, next) =>
+  reportesController.getEventosPorUbicacion(req, res, next)
 );

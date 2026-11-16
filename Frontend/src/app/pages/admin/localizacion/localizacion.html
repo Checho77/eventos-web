@@ -1,0 +1,152 @@
+<header class="mb-4">
+  <h1 class="titulo-pagina h3">Administración de Localización</h1>
+  <p class="subtitulo-pagina mb-0">Gestión de Países, Departamentos y Ciudades en la base de datos</p>
+</header>
+
+@if (errorMensaje) {
+  <div class="alert alert-danger mb-3">{{ errorMensaje }}</div>
+}
+
+<ul class="nav nav-pills mb-4 gap-2">
+  <li class="nav-item">
+    <button class="nav-link" [class.active]="pestana === 'paises'" (click)="pestana = 'paises'">Países</button>
+  </li>
+  <li class="nav-item">
+    <button class="nav-link" [class.active]="pestana === 'departamentos'" (click)="pestana = 'departamentos'">Departamentos</button>
+  </li>
+  <li class="nav-item">
+    <button class="nav-link" [class.active]="pestana === 'ciudades'" (click)="pestana = 'ciudades'">Ciudades</button>
+  </li>
+</ul>
+
+<!-- ================= PAÍSES ================= -->
+@if (pestana === 'paises') {
+  <div class="row g-4">
+    <div class="col-12 col-md-5">
+      <div class="card shadow-sm"><div class="card-body">
+        <h2 class="h5 mb-3">Registrar nuevo país</h2>
+        <div class="mb-3">
+          <label class="form-label">Nombre del país</label>
+          <input type="text" class="form-control" [(ngModel)]="nuevoPais" placeholder="Ej. Perú" />
+        </div>
+        <button class="btn btn-primary btn-sm" [disabled]="cargando" (click)="crearPais()">
+          {{ cargando ? 'Guardando...' : 'Crear país' }}
+        </button>
+      </div></div>
+    </div>
+    <div class="col-12 col-md-7">
+      <div class="card shadow-sm"><div class="card-body">
+        <h2 class="h5 mb-3">Listado de países</h2>
+        <table class="table table-sm align-middle mb-0 tabla-datos">
+          <thead><tr><th>ID</th><th>País</th><th class="text-end">Acción</th></tr></thead>
+          <tbody>
+            @for (p of paises$ | async; track p.id) {
+              <tr>
+                <td>#{{ p.id }}</td>
+                <td><strong>{{ p.nombre }}</strong></td>
+                <td class="text-end">
+                  <button class="btn btn-outline-danger btn-sm" (click)="eliminarPais(p.id)">Eliminar</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div></div>
+    </div>
+  </div>
+}
+
+<!-- ================= DEPARTAMENTOS ================= -->
+@if (pestana === 'departamentos') {
+  <div class="row g-4">
+    <div class="col-12 col-md-5">
+      <div class="card shadow-sm"><div class="card-body">
+        <h2 class="h5 mb-3">Registrar nuevo departamento</h2>
+        <div class="mb-3">
+          <label class="form-label">País</label>
+          <select class="form-select" [(ngModel)]="nuevoDeptoPaisId">
+            <option [ngValue]="null">-- Selecciona un país --</option>
+            @for (p of paises$ | async; track p.id) {
+              <option [ngValue]="p.id">{{ p.nombre }}</option>
+            }
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Nombre del departamento</label>
+          <input type="text" class="form-control" [(ngModel)]="nuevoDeptoNombre" placeholder="Ej. Santander" />
+        </div>
+        <button class="btn btn-primary btn-sm" [disabled]="cargando" (click)="crearDepartamento()">
+          {{ cargando ? 'Guardando...' : 'Crear departamento' }}
+        </button>
+      </div></div>
+    </div>
+    <div class="col-12 col-md-7">
+      <div class="card shadow-sm"><div class="card-body">
+        <h2 class="h5 mb-3">Listado de departamentos</h2>
+        <table class="table table-sm align-middle mb-0 tabla-datos">
+          <thead><tr><th>ID</th><th>Departamento</th><th>País</th><th class="text-end">Acción</th></tr></thead>
+          <tbody>
+            @for (d of departamentos$ | async; track d.id) {
+              <tr>
+                <td>#{{ d.id }}</td>
+                <td><strong>{{ d.nombre }}</strong></td>
+                <td>{{ d.paisNombre || 'Asociado' }}</td>
+                <td class="text-end">
+                  <button class="btn btn-outline-danger btn-sm" (click)="eliminarDepartamento(d.id)">Eliminar</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div></div>
+    </div>
+  </div>
+}
+
+<!-- ================= CIUDADES ================= -->
+@if (pestana === 'ciudades') {
+  <div class="row g-4">
+    <div class="col-12 col-md-5">
+      <div class="card shadow-sm"><div class="card-body">
+        <h2 class="h5 mb-3">Registrar nueva ciudad</h2>
+        <div class="mb-3">
+          <label class="form-label">Departamento</label>
+          <select class="form-select" [(ngModel)]="nuevaCiudadDeptoId">
+            <option [ngValue]="null">-- Selecciona un departamento --</option>
+            @for (d of departamentos$ | async; track d.id) {
+              <option [ngValue]="d.id">{{ d.nombre }}</option>
+            }
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Nombre de la ciudad</label>
+          <input type="text" class="form-control" [(ngModel)]="nuevaCiudadNombre" placeholder="Ej. Bucaramanga" />
+        </div>
+        <button class="btn btn-primary btn-sm" [disabled]="cargando" (click)="crearCiudad()">
+          {{ cargando ? 'Guardando...' : 'Crear ciudad' }}
+        </button>
+      </div></div>
+    </div>
+    <div class="col-12 col-md-7">
+      <div class="card shadow-sm"><div class="card-body">
+        <h2 class="h5 mb-3">Listado de ciudades</h2>
+        <table class="table table-sm align-middle mb-0 tabla-datos">
+          <thead><tr><th>ID</th><th>Ciudad</th><th>Departamento</th><th>País</th><th class="text-end">Acción</th></tr></thead>
+          <tbody>
+            @for (c of ciudades$ | async; track c.id) {
+              <tr>
+                <td>#{{ c.id }}</td>
+                <td><strong>{{ c.nombre }}</strong></td>
+                <td>{{ c.departamento }}</td>
+                <td>{{ c.pais }}</td>
+                <td class="text-end">
+                  <button class="btn btn-outline-danger btn-sm" (click)="eliminarCiudad(c.id)">Eliminar</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div></div>
+    </div>
+  </div>
+}

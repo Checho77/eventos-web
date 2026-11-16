@@ -119,4 +119,26 @@ export const reportesRepository = {
       eventos: Number(r.eventos),
     }));
   },
+
+  async eventosPorUbicacion() {
+    const query = `
+      SELECT p.nombre AS pais,
+             d.nombre AS departamento,
+             c.nombre AS ciudad,
+             COUNT(e.id)::int AS eventos
+      FROM ciudades c
+      JOIN departamentos d ON d.id = c.departamento_id
+      JOIN paises p        ON p.id = d.pais_id
+      LEFT JOIN eventos e  ON e.ciudad_id = c.id
+      GROUP BY p.nombre, d.nombre, c.nombre
+      ORDER BY p.nombre, d.nombre, c.nombre
+    `;
+    const { rows } = await pool.query(query);
+    return rows.map((r) => ({
+      pais: r.pais,
+      departamento: r.departamento,
+      ciudad: r.ciudad,
+      eventos: Number(r.eventos),
+    }));
+  },
 };

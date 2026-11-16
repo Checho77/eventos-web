@@ -85,7 +85,24 @@ export class EventosService {
       throw { status: 403, message: "Solo puedes modificar tus propios eventos" };
     }
 
-    const datos = this.validarDatos(body);
+    const datosCombinados = {
+      nombre: body.nombre ?? existente.nombre,
+      descripcion: body.descripcion !== undefined ? body.descripcion : existente.descripcion,
+      teatro: body.teatro ?? existente.teatro,
+      ciudadId: body.ciudadId ?? existente.ciudad?.id ?? (existente as any).ciudadId,
+      fechaInicio: body.fechaInicio ?? existente.fechaInicio,
+      fechaFin: body.fechaFin ?? existente.fechaFin,
+      capacidad: body.capacidad !== undefined ? Number(body.capacidad) : existente.capacidad,
+      precioBase: body.precioBase !== undefined ? Number(body.precioBase) : existente.precioBase,
+      observaciones: body.observaciones !== undefined ? body.observaciones : existente.observaciones,
+      estado: body.estado ?? existente.estado,
+      causaCancelacion:
+        body.causaCancelacion !== undefined
+          ? body.causaCancelacion
+          : (existente.causaCancelacion ?? null),
+    };
+
+    const datos = this.validarDatos(datosCombinados);
     return eventosRepository.actualizar(id, datos);
   }
 
