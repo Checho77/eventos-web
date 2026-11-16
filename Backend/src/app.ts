@@ -1,6 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import path from "path";
+import { authRoutes } from "./modules/auth/auth.routes";
 import { envs } from "./config/envs";
 import { localizacionRoutes } from "./modules/localizacion/localizacion.routes";
 
@@ -14,6 +15,7 @@ app.get("/api/health", (_req: Request, res: Response) => {
   res.json({ ok: true });
 });
 
+app.use("/api/auth", authRoutes);
 app.use("/api", localizacionRoutes);
 
 // Manejador de errores (siempre al final)
