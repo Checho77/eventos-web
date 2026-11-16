@@ -2,7 +2,9 @@
 
 **Docente:** Jesús David Mejía Vergara  
 **Institución:** Unidad Central del Valle del Cauca (UCEVA)  
-**Proyecto:** Sistema de Gestión y Reserva de Eventos
+**Proyecto:** Sistema de Gestión y Reserva de Eventos  
+**Integrantes:**
+* Sergio Álvarez ([@Checho77](https://github.com/Checho77))
 
 ---
 

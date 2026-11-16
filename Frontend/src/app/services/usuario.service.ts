@@ -3,7 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Administrador, Agente, Cliente } from '../models/persona';
-import { CALI } from '../mocks/ciudades.mock';
+
+const CIUDAD_DEFAULT = {
+  id: 1,
+  nombre: 'Cali',
+  departamento: 'Valle del Cauca',
+  pais: 'Colombia',
+};
 
 @Injectable({ providedIn: 'root' })
 export class UsuarioService {
@@ -59,7 +65,7 @@ export class UsuarioService {
         nombreCompleto: this.usuarioLogueado.nombreCompleto,
         correo: this.usuarioLogueado.correo,
         direccion: this.usuarioLogueado.direccion ?? 'Carrera 5 # 10-20',
-        ciudad: this.usuarioLogueado.ciudad ?? CALI,
+        ciudad: this.usuarioLogueado.ciudad ?? CIUDAD_DEFAULT,
         telefonos: this.usuarioLogueado.telefonos ?? ['3001234567'],
         puntos: this.usuarioLogueado.puntos ?? 120,
         visualizaPublicidad: true,
@@ -72,7 +78,7 @@ export class UsuarioService {
       nombreCompleto: 'Laura Gómez',
       correo: 'laura.gomez@email.com',
       direccion: 'Carrera 5 # 10-20',
-      ciudad: CALI,
+      ciudad: CIUDAD_DEFAULT,
       telefonos: ['3001234567', '3157654321'],
       puntos: 120,
       visualizaPublicidad: true,
@@ -87,7 +93,7 @@ export class UsuarioService {
         nombreCompleto: this.usuarioLogueado.nombreCompleto,
         correo: this.usuarioLogueado.correo,
         direccion: this.usuarioLogueado.direccion ?? 'Calle 5 # 38-10',
-        ciudad: this.usuarioLogueado.ciudad ?? CALI,
+        ciudad: this.usuarioLogueado.ciudad ?? CIUDAD_DEFAULT,
         telefonos: this.usuarioLogueado.telefonos ?? ['3004445566'],
         comision: this.usuarioLogueado.comision ?? 8,
         experiencia: this.usuarioLogueado.experiencia ?? 5,
@@ -100,7 +106,7 @@ export class UsuarioService {
       nombreCompleto: 'Andrés Cifuentes',
       correo: 'andres.cifuentes@eventos.com',
       direccion: 'Calle 5 # 38-10',
-      ciudad: CALI,
+      ciudad: CIUDAD_DEFAULT,
       telefonos: ['3004445566'],
       comision: 8,
       experiencia: 5,
@@ -115,7 +121,7 @@ export class UsuarioService {
         nombreCompleto: this.usuarioLogueado.nombreCompleto,
         correo: this.usuarioLogueado.correo,
         direccion: this.usuarioLogueado.direccion ?? 'Calle 10 # 4-20',
-        ciudad: this.usuarioLogueado.ciudad ?? CALI,
+        ciudad: this.usuarioLogueado.ciudad ?? CIUDAD_DEFAULT,
         telefonos: this.usuarioLogueado.telefonos ?? ['3012223344'],
         salario: this.usuarioLogueado.salario ?? 4500000,
         horario: this.usuarioLogueado.horario ?? 'Lunes a viernes, 8:00 a.m. a 5:00 p.m.',
@@ -128,7 +134,7 @@ export class UsuarioService {
       nombreCompleto: 'Sergio Álvarez',
       correo: 'admin@eventos.com',
       direccion: 'Calle 10 # 4-20',
-      ciudad: CALI,
+      ciudad: CIUDAD_DEFAULT,
       telefonos: ['3012223344'],
       salario: 4500000,
       horario: 'Lunes a viernes, 8:00 a.m. a 5:00 p.m.',
