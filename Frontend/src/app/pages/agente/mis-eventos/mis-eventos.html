@@ -18,6 +18,7 @@
           <th class="text-center">Capacidad</th>
           <th>Precio base</th>
           <th>Estado</th>
+          <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -33,10 +34,32 @@
             <td class="text-center">{{ evento.capacidad }}</td>
             <td>{{ evento.precioBase | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
             <td><app-estado-badge [estado]="evento.estado" /></td>
+            <td>
+              <div class="d-flex gap-1">
+                @if (evento.estado !== 'Cancelado' && evento.estado !== 'Finalizado') {
+                  <button
+                    type="button"
+                    class="btn btn-outline-warning btn-sm"
+                    title="Cancelar evento"
+                    (click)="cancelarEvento(evento.id)"
+                  >
+                    Cancelar
+                  </button>
+                }
+                <button
+                  type="button"
+                  class="btn btn-outline-danger btn-sm"
+                  title="Eliminar evento"
+                  (click)="eliminarEvento(evento.id)"
+                >
+                  Eliminar
+                </button>
+              </div>
+            </td>
           </tr>
         } @empty {
           <tr>
-            <td colspan="7" class="text-center text-muted py-4">Aún no has registrado eventos.</td>
+            <td colspan="8" class="text-center text-muted py-4">Aún no has registrado eventos.</td>
           </tr>
         }
       </tbody>

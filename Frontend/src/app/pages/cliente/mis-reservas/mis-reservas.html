@@ -16,6 +16,7 @@
           <th class="text-center">Entradas</th>
           <th>Valor total</th>
           <th>Estado</th>
+          <th>Acción</th>
         </tr>
       </thead>
       <tbody>
@@ -35,10 +36,23 @@
                 <div class="causa">{{ reserva.causaCancelacion }}</div>
               }
             </td>
+            <td>
+              @if (reserva.estado !== 'Cancelada') {
+                <button
+                  type="button"
+                  class="btn btn-outline-danger btn-sm"
+                  (click)="cancelarReserva(reserva.id)"
+                >
+                  Cancelar
+                </button>
+              } @else {
+                <span class="text-muted small">Sin acciones</span>
+              }
+            </td>
           </tr>
         } @empty {
           <tr>
-            <td colspan="6" class="text-center text-muted py-4">Aún no tienes reservas.</td>
+            <td colspan="7" class="text-center text-muted py-4">Aún no tienes reservas.</td>
           </tr>
         }
       </tbody>

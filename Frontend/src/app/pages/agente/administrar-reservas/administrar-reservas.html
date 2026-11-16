@@ -30,12 +30,18 @@
             <td><app-estado-badge [estado]="reserva.estado" /></td>
             <td>
               <div class="acciones d-flex gap-2">
-                <select class="form-select form-select-sm" [attr.aria-label]="'Estado de la reserva ' + reserva.id">
+                <select #estadoSelect class="form-select form-select-sm" [attr.aria-label]="'Estado de la reserva ' + reserva.id">
                   @for (estado of estados; track estado) {
-                    <option [selected]="estado === reserva.estado">{{ estado }}</option>
+                    <option [value]="estado" [selected]="estado === reserva.estado">{{ estado }}</option>
                   }
                 </select>
-                <button type="button" class="btn btn-primary btn-sm">Actualizar</button>
+                <button
+                  type="button"
+                  class="btn btn-primary btn-sm"
+                  (click)="actualizarEstado(reserva.id, estadoSelect)"
+                >
+                  Actualizar
+                </button>
               </div>
             </td>
           </tr>

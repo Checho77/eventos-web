@@ -4,6 +4,12 @@
     <p class="subtitulo-pagina mb-0">Completa los datos de tu reserva</p>
   </header>
 
+  @if (errorMensaje) {
+    <div class="alert alert-danger mb-3" role="alert">
+      {{ errorMensaje }}
+    </div>
+  }
+
   <div class="row g-4">
     <div class="col-12 col-lg-6">
       <div class="card shadow-sm h-100">
@@ -19,7 +25,7 @@
             <dt>Inicio</dt><dd>{{ evento.fechaInicio | date:'dd/MM/yyyy HH:mm' }}</dd>
             <dt>Finalización</dt><dd>{{ evento.fechaFin | date:'dd/MM/yyyy HH:mm' }}</dd>
             <dt>Precio por entrada</dt><dd>{{ evento.precioBase | currency:'COP':'symbol-narrow':'1.0-0' }}</dd>
-            <dt>Observaciones</dt><dd>{{ evento.observaciones }}</dd>
+            <dt>Observaciones</dt><dd>{{ evento.observaciones || 'Ninguna' }}</dd>
           </dl>
         </div>
       </div>
@@ -32,16 +38,40 @@
 
           <div class="mb-3">
             <label for="entradas" class="form-label">Número de entradas</label>
-            <input id="entradas" type="number" class="form-control" min="1" value="1">
+            <input
+              id="entradas"
+              type="number"
+              class="form-control"
+              min="1"
+              [(ngModel)]="numeroEntradas"
+            />
           </div>
 
           <div class="mb-3">
             <label for="observaciones" class="form-label">Observaciones</label>
-            <textarea id="observaciones" class="form-control" rows="3"></textarea>
+            <textarea
+              id="observaciones"
+              class="form-control"
+              rows="3"
+              [(ngModel)]="observaciones"
+              placeholder="Ej. Sillas preferenciales, requerimientos de acceso, etc."
+            ></textarea>
+          </div>
+
+          <div class="alert alert-light border mb-3">
+            <strong>Total a pagar: </strong>
+            {{ (numeroEntradas * evento.precioBase) | currency:'COP':'symbol-narrow':'1.0-0' }}
           </div>
 
           <div class="d-flex flex-wrap gap-2">
-            <button type="button" class="btn btn-primary">Confirmar reserva</button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              [disabled]="cargando"
+              (click)="confirmarReserva()"
+            >
+              {{ cargando ? 'Procesando...' : 'Confirmar reserva' }}
+            </button>
             <a class="btn btn-outline-secondary" routerLink="/cliente/eventos">Volver a eventos</a>
           </div>
         </div>
@@ -50,7 +80,7 @@
   </div>
 } @else {
   <div class="alert alert-warning">
-    No se encontró el evento solicitado.
+    No se encontró el evento solicitado o está cargando...
     <a routerLink="/cliente/eventos">Volver a eventos</a>
   </div>
 }

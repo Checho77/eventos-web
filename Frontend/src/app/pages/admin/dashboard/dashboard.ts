@@ -1,5 +1,6 @@
 import { AsyncPipe, CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { tap } from 'rxjs/operators';
 import { EventoService } from '../../../services/evento.service';
 import { ReporteService } from '../../../services/reporte.service';
 import { ReservaService } from '../../../services/reserva.service';
@@ -18,11 +19,18 @@ export class Dashboard {
 
   /** Reporte general de registros */
   resumen$ = this.reporteService.resumen();
-  ingresosTotales = this.reporteService.ingresosTotales();
+  ingresosTotales = 0;
+  maxIngreso = 1;
 
   /** Reportes comerciales */
-  ingresosMensuales$ = this.reporteService.ingresosMensuales();
-  maxIngreso = this.reporteService.ingresoMensualMaximo();
+  ingresosMensuales$ = this.reporteService.ingresosMensuales().pipe(
+    tap(meses => {
+      if (meses && meses.length > 0) {
+        this.ingresosTotales = meses.reduce((total, item) => total + item.ingresos, 0);
+        this.maxIngreso = Math.max(1, ...meses.map(item => item.ingresos));
+      }
+    })
+  );
   promedioAgentes$ = this.reporteService.promedioPorAgente();
   promedioClientes$ = this.reporteService.promedioPorCliente();
   reservasEventoMes$ = this.reporteService.reservasPorEventoMes();

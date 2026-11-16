@@ -1,13 +1,18 @@
-import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { Ciudad } from '../models/ubicacion';
-import { CIUDADES } from '../mocks/ciudades.mock';
 
 @Injectable({ providedIn: 'root' })
 export class UbicacionService {
+  private http = inject(HttpClient);
+  private apiUrl = 'http://localhost:3000/api';
 
-  /** Cuando exista el backend: return this.http.get<Ciudad[]>(...) */
   listarCiudades(): Observable<Ciudad[]> {
-    return of(CIUDADES);
+    return this.http.get<Ciudad[]>(`${this.apiUrl}/ciudades`);
+  }
+
+  obtenerCiudadPorId(id: number): Observable<Ciudad> {
+    return this.http.get<Ciudad>(`${this.apiUrl}/ciudades/${id}`);
   }
 }

@@ -1,62 +1,48 @@
-import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import {
   EventosAgenteCiudad,
   IngresoMensual,
   PromedioIngreso,
   ReservasEventoMes,
-  ResumenSistema
+  ResumenSistema,
 } from '../models/reportes';
-import { ADMINISTRADORES, AGENTES, CLIENTES } from '../mocks/personas.mock';
-import { EVENTOS } from '../mocks/eventos.mock';
-import { RESERVAS } from '../mocks/reservas.mock';
-import {
-  EVENTOS_POR_AGENTE_CIUDAD,
-  INGRESOS_MENSUALES,
-  PROMEDIO_POR_AGENTE,
-  PROMEDIO_POR_CLIENTE,
-  RESERVAS_POR_EVENTO_MES
-} from '../mocks/reportes.mock';
 
 @Injectable({ providedIn: 'root' })
 export class ReporteService {
+  private http = inject(HttpClient);
+  private apiUrl = 'http://localhost:3000/api/reportes';
 
   resumen(): Observable<ResumenSistema> {
-    return of({
-      clientes: CLIENTES.length,
-      agentes: AGENTES.length,
-      administradores: ADMINISTRADORES.length,
-      reservas: RESERVAS.length,
-      eventos: EVENTOS.length
-    });
+    return this.http.get<ResumenSistema>(`${this.apiUrl}/resumen`);
   }
 
   ingresosMensuales(): Observable<IngresoMensual[]> {
-    return of(INGRESOS_MENSUALES);
-  }
-
-  /** Mayor ingreso mensual: sirve para calcular el ancho de las barras. */
-  ingresoMensualMaximo(): number {
-    return Math.max(...INGRESOS_MENSUALES.map(item => item.ingresos));
-  }
-
-  ingresosTotales(): number {
-    return INGRESOS_MENSUALES.reduce((total, item) => total + item.ingresos, 0);
+    return this.http.get<IngresoMensual[]>(`${this.apiUrl}/ingresos-mensuales`);
   }
 
   promedioPorAgente(): Observable<PromedioIngreso[]> {
-    return of(PROMEDIO_POR_AGENTE);
+    return this.http.get<PromedioIngreso[]>(`${this.apiUrl}/promedio-agente`);
   }
 
   promedioPorCliente(): Observable<PromedioIngreso[]> {
-    return of(PROMEDIO_POR_CLIENTE);
+    return this.http.get<PromedioIngreso[]>(`${this.apiUrl}/promedio-cliente`);
   }
 
   reservasPorEventoMes(): Observable<ReservasEventoMes[]> {
-    return of(RESERVAS_POR_EVENTO_MES);
+    return this.http.get<ReservasEventoMes[]>(`${this.apiUrl}/reservas-evento-mes`);
   }
 
   eventosPorAgenteCiudad(): Observable<EventosAgenteCiudad[]> {
-    return of(EVENTOS_POR_AGENTE_CIUDAD);
+    return this.http.get<EventosAgenteCiudad[]>(`${this.apiUrl}/eventos-agente-ciudad`);
+  }
+
+  ingresoMensualMaximo(): number {
+    return 1000000;
+  }
+
+  ingresosTotales(): number {
+    return 0;
   }
 }
