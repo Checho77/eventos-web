@@ -4,7 +4,8 @@ import { autenticar, requiereRol } from "../../middlewares/auth.middleware";
 
 export const perfilesRoutes = Router();
 
-perfilesRoutes.use(autenticar, requiereRol("administrador"));
+// Solo las rutas de perfiles requieren autenticación de administrador
+perfilesRoutes.use(["/clientes", "/agentes", "/administradores"], autenticar, requiereRol("administrador"));
 
 // Clientes
 perfilesRoutes.get("/clientes", (req, res, next) => perfilesController.getClientes(req, res, next));

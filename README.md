@@ -63,10 +63,10 @@ eventos-web/
     │   │   ├── interceptors/     # authInterceptor (adjunta Bearer token a peticiones HTTP)
     │   │   ├── models/           # Interfaces TypeScript (Evento, Reserva, Ubicación, etc.)
     │   │   ├── pages/
-    │   │   │   ├── auth/         # Login y Registro
+    │   │   │   ├── auth/         # Login (con acceso rápido demo) y Registro (Cliente o Agente)
     │   │   │   ├── cliente/      # Eventos disponibles, Reservar evento, Mis reservas
-    │   │   │   ├── agente/       # Registrar evento, Mis eventos, Administrar reservas
-    │   │   │   └── admin/        # Dashboard de Reportes y Administración de Localización
+    │   │   │   ├── agente/       # Registrar evento, Mis eventos (con edición), Administrar reservas
+    │   │   │   └── admin/        # Dashboard de Reportes, Gestión de Usuarios/Perfiles y Localización (CRUD)
     │   │   └── services/         # Servicios HTTP conectados a la API REST (HttpClient)
     │   └── main.ts
 ```
@@ -95,6 +95,8 @@ eventos-web/
    # En Windows PowerShell:
    copy .env.example .env
    ```
+   > [!TIP]
+   > **Seguridad JWT:** El archivo `.env.example` incluye un secreto para facilitar la ejecución local y pruebas académicas. En un entorno de producción real, debe reemplazarse por una clave aleatoria de alta entropía.
 3. Levanta los contenedores de Docker:
    ```bash
    docker compose up -d
@@ -153,8 +155,11 @@ Todos los usuarios tienen la contraseña: **`123456`**
 | :--- | :--- | :--- | :--- |
 | **Cliente** | `laura.gomez@email.com` | Laura Gómez | Explorar eventos disponibles, reservar entradas, ver historial y cancelar reservas. |
 | **Cliente** | `carlos.ramirez@email.com` | Carlos Ramírez | Cliente con reservas previas. |
-| **Agente** | `andres.cifuentes@eventos.com` | Andrés Cifuentes | Registrar nuevos eventos, listar sus eventos, cancelar/eliminar eventos y cambiar estados de reservas. |
-| **Administrador** | `admin@eventos.com` | Sergio David Castro | Acceso total: Dashboard con reportes agregados y administración CRUD de Localización (países, departamentos, ciudades). |
+| **Agente** | `andres.cifuentes@eventos.com` | Andrés Cifuentes | Registrar nuevos eventos, listar sus eventos, editar/cancelar/eliminar eventos y cambiar estados de reservas. |
+| **Administrador** | `admin@eventos.com` | Sergio David Castro | Acceso total: Dashboard con reportes agregados, administración CRUD de Usuarios y Perfiles (`/admin/usuarios`) y Localización (`/admin/localizacion`). |
+
+> [!NOTE]
+> **Registro Público:** La interfaz de registro (`/auth/registro`) permite el autorregistro como **Cliente** o como **Agente** (solicitando sus años de experiencia profesional y asignando comisión comercial inicial). Los perfiles de **Administrador** no pueden autorregistrarse públicamente y son gestionados con acceso restringido desde la base de datos o por otro administrador en la pantalla de gestión de usuarios.
 
 ---
 

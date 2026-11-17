@@ -33,7 +33,7 @@ app.use("/api", localizacionRoutes);
 app.use("/api", perfilesRoutes);
 
 // Manejo de 404 para cualquier ruta inexistente bajo /api
-app.all("/api/*", (_req: Request, res: Response) => {
+app.use("/api", (_req: Request, res: Response) => {
   res.status(404).json({ error: "Endpoint de API no encontrado" });
 });
 
